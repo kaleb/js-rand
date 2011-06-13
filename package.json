@@ -1,0 +1,15 @@
+{
+  "author": "Kaleb Hornsby <kaleb@hornsby.ws> (kaleb.hornsby.ws)",
+  "name": "rand",
+  "description": "Ranom Utilities",
+  "version": "0.0.0",
+  "repository": {
+    "url": ""
+  },
+  "main": "rand.js",
+  "engines": {
+    "node": "~v0.4.9-pre"
+  },
+  "dependencies": {},
+  "devDependencies": {}
+}
