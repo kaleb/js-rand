@@ -5,15 +5,16 @@
  * @version 2011-06-11
  */
 "use strict";
-/** @namespace exports */
+/** @namespace rand */
+module.exports = Math.random;
 
 /**
  * @return random
  * @example
- * var n = exports.uniform(2, 3);
+ * var n = rand.uniform(2, 3);
  * 1 <= n && n <= 2;
  * //-> true
- * exports.uniform(2, 2);
+ * rand.uniform(2, 2);
  * //-> 2
  */
 exports.uniform = function(a, b) /**number*/ {
@@ -27,10 +28,10 @@ exports.uniform = function(a, b) /**number*/ {
 /**
  * @return random
  * @example
- * var n = exports.int_(2, 4);
+ * var n = rand.int_(2, 4);
  * 2 <= n && n < 4
  * //-> true
- * exports.int_(2, 3);
+ * rand.int_(2, 3);
  * //-> 2
  */
 exports.int_ = function(j, k) /**int*/ {
@@ -61,10 +62,10 @@ exports.range = function(start, stop, step) {
  * @param k
  * @return random
  * @example
- * var n = exports.int(2, 3);
+ * var n = rand.int(2, 3);
  * 2 <= n && n <= 3
  * //-> true
- * exports.int(2, 2);
+ * rand.int(2, 2);
  * //-> 2;
  */
 exports['int'] = function(j, k) /**int*/ {
@@ -78,10 +79,10 @@ exports['int'] = function(j, k) /**int*/ {
 /**
  * @return random index
  * @example
- * var n = exports.index(new Array(3));
+ * var n = rand.index(new Array(3));
  * 0 <= n && n < 3;
  * //-> true
- * exports.index('c');
+ * rand.index('c');
  * //-> 0
  */
 exports.index = function(seq) /**int*/ {
@@ -91,10 +92,10 @@ exports.index = function(seq) /**int*/ {
 /**
  * @return {*} random item
  * @example
- * var o = exports.item(['a','b']);
+ * var o = rand.item(['a','b']);
  * o == 'a' || o == 'b';
  * //-> true
- * exports.item('c');
+ * rand.item('c');
  * //-> 'c'
  */
 exports.item = function(ary) {
