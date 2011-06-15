@@ -6,7 +6,18 @@
  */
 "use strict";
 /** @namespace rand */
-module.exports = Math.random;
+var rand = Math.random;
+
+if (typeof module !== 'undefined' && module.exports) {
+    // using CommonJS
+    module.exports = rand;
+} else if (typeof window !== 'undefined' && window.document) {
+    // using DOM
+    window.rand = rand;
+}
+//////////////////////////////////////////////////////////////////////////////
+// Functions for Numbers:
+//////////////////////////////////////////////////////////////////////////////
 
 /**
  * @return random
@@ -17,9 +28,10 @@ module.exports = Math.random;
  * rand.uniform(2, 2);
  * //-> 2
  */
-exports.uniform = function(a, b) /**number*/ {
+rand.uniform = function(a, b) /**number*/ {
     return Math.random() * (b - a) + a;
 };
+rand.num  = rand.uniform;
 
 //////////////////////////////////////////////////////////////////////////////
 // Functions for integers:
@@ -34,21 +46,21 @@ exports.uniform = function(a, b) /**number*/ {
  * rand.int_(2, 3);
  * //-> 2
  */
-exports.int_ = function(j, k) /**int*/ {
-    return Math.floor(exports.uniform(j, k));
+rand.int_ = function(j, k) /**int*/ {
+    return Math.floor(rand.uniform(j, k));
 };
 
 /**
  * @return a randomly selected element from {{start, start + step, ..., stop}}.
  */
-exports.range = function(start, stop, step) {
+rand.range = function(start, stop, step) {
     switch (arguments.length) {
     case 1:
-        return exports.int_(0, start);
+        return rand.int_(0, start);
     case 2:
-        return exports.int_(start, stop);
+        return rand.int_(start, stop);
     case 3:
-        return exports.int_(start, stop / step) * step;
+        return rand.int_(start, stop / step) * step;
     default:
         return 0;
     }
@@ -68,8 +80,8 @@ exports.range = function(start, stop, step) {
  * rand.int(2, 2);
  * //-> 2;
  */
-exports['int'] = function(j, k) /**int*/ {
-    return exports.int_(j, k + 1);
+rand['int'] = function(j, k) /**int*/ {
+    return rand.int_(j, k + 1);
 };
 
 //////////////////////////////////////////////////////////////////////////////
@@ -85,8 +97,8 @@ exports['int'] = function(j, k) /**int*/ {
  * rand.index('c');
  * //-> 0
  */
-exports.index = function(seq) /**int*/ {
-    return exports.int_(0, seq.length);
+rand.index = function(seq) /**int*/ {
+    return rand.int_(0, seq.length);
 };
 
 /**
@@ -98,8 +110,8 @@ exports.index = function(seq) /**int*/ {
  * rand.item('c');
  * //-> 'c'
  */
-exports.item = function(ary) {
-    return ary[exports.index(ary)];
+rand.item = function(ary) {
+    return ary[rand.index(ary)];
 };
 
 //////////////////////////////////////////////////////////////////////////////
@@ -109,7 +121,7 @@ exports.item = function(ary) {
 /**
  * @private
  */
-exports.key_ = function(obj) /**string*/ {
+rand.key_ = function(obj) /**string*/ {
     var k, r, i = 0;
     for (k in obj) {
         if (obj.hasOwnProperty(k) && rand() < 1 / ++i) {
@@ -122,14 +134,14 @@ exports.key_ = function(obj) /**string*/ {
 /**
  * @return random key
  */
-exports.key = function(obj) /**string*/ {
-    if (!Object.keys) { return exports.key_(obj); }
-    return exports.item(Object.keys(obj));
+rand.key = function(obj) /**string*/ {
+    if (!Object.keys) { return rand.key_(obj); }
+    return rand.item(Object.keys(obj));
 };
 
 /**
  * @return {*} random property
  */
-exports.choice = function(obj) {
-    return obj[exports.key(obj)];
+rand.choice = function(obj) {
+    return obj[rand.key(obj)];
 };
