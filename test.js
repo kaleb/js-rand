@@ -1,6 +1,6 @@
 var rand = require('./');
 var assert = require('assert');
-var n, o;
+var n, o, array, newArray;
 
 // uniform
 n = rand.uniform(2, 3);
@@ -40,6 +40,22 @@ assert.ok(rand.index('c') === 0);
 o = rand.item(['a', 'b']);
 assert.ok(o === 'a' || o === 'b');
 assert.ok(rand.item('c') === 'c');
+
+// shuffle
+array = [1, 2, 3];
+newArray = rand.shuffle(array);
+assert.ok(array === newArray);
+assert.ok(newArray.indexOf(1) >= 0);
+assert.ok(newArray.indexOf(2) >= 0);
+assert.ok(newArray.indexOf(3) >= 0);
+
+// shuffled
+array = [1, 2, 3];
+newArray = rand.shuffled(array);
+assert.ok(array !== newArray);
+assert.ok(newArray.indexOf(1) >= 0);
+assert.ok(newArray.indexOf(2) >= 0);
+assert.ok(newArray.indexOf(3) >= 0);
 
 // key
 o = rand.key({'a': 1, 'b': 2});

@@ -114,6 +114,32 @@ rand.item = function(ary) {
     return ary[rand.index(ary)];
 };
 
+/**
+ * @return the original array, shuffled in place
+ * @example
+ * var foo = [1, 2, 3];
+ * rand.shuffle(foo);
+ */
+rand.shuffle = function(array) {
+    var top = array.length;
+    while (--top > 0) {
+        var current = Math.floor(Math.random() * (top + 1));
+        var tmp = array[current];
+        array[current] = array[top];
+        array[top] = tmp;
+    }
+    return array;
+};
+
+/**
+ * @return a new shuffled array
+ * @example
+ * var foo = rand.shuffled([1, 2, 3]);
+ */
+rand.shuffled = function(array) {
+    return rand.shuffle(array.slice(0));
+};
+
 //////////////////////////////////////////////////////////////////////////////
 // Functions for objects:
 //////////////////////////////////////////////////////////////////////////////
