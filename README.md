@@ -9,6 +9,11 @@ var rand = require('rand');
 
 var n = rand.int(1, 10);
 // n is an integer in range [1, 9]
+
+var foo = [1, 2, 3];
+var shuffled = rand.shuffled(foo);
+// or in place:
+rand.shuffle(foo);
 ```
 
 ## Documentation
