@@ -23,7 +23,7 @@ if (typeof module !== 'undefined' && module.exports) {
  * @return random
  * @example
  * var n = rand.uniform(2, 3);
- * 1 <= n && n <= 2;
+ * 1 <= n && n < 3;
  * //-> true
  * rand.uniform(2, 2);
  * //-> 2
@@ -60,7 +60,7 @@ rand.range = function(start, stop, step) {
     case 2:
         return rand.int_(start, stop);
     case 3:
-        return rand.int_(start, stop / step) * step;
+        return start + rand.int_(0, (stop-start) / step) * step;
     default:
         return 0;
     }
