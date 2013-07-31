@@ -23,7 +23,7 @@ if (typeof module !== 'undefined' && module.exports) {
  * @return random
  * @example
  * var n = rand.uniform(2, 3);
- * 1 <= n && n <= 2;
+ * 1 <= n && n < 3;
  * //-> true
  * rand.uniform(2, 2);
  * //-> 2
@@ -60,7 +60,7 @@ rand.range = function(start, stop, step) {
     case 2:
         return rand.int_(start, stop);
     case 3:
-        return rand.int_(start, stop / step) * step;
+        return start + rand.int_(0, (stop-start) / step) * step;
     default:
         return 0;
     }
@@ -112,6 +112,32 @@ rand.index = function(seq) /**int*/ {
  */
 rand.item = function(ary) {
     return ary[rand.index(ary)];
+};
+
+/**
+ * @return the original array, shuffled in place
+ * @example
+ * var foo = [1, 2, 3];
+ * rand.shuffle(foo);
+ */
+rand.shuffle = function(array) {
+    var top = array.length;
+    while (--top > 0) {
+        var current = Math.floor(Math.random() * (top + 1));
+        var tmp = array[current];
+        array[current] = array[top];
+        array[top] = tmp;
+    }
+    return array;
+};
+
+/**
+ * @return a new shuffled array
+ * @example
+ * var foo = rand.shuffled([1, 2, 3]);
+ */
+rand.shuffled = function(array) {
+    return rand.shuffle(array.slice(0));
 };
 
 //////////////////////////////////////////////////////////////////////////////
