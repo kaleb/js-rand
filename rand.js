@@ -122,8 +122,8 @@ rand.item = function(ary) {
  */
 rand.shuffle = function(array) {
     var top = array.length;
-    while (--top > 0) {
-        var current = Math.floor(Math.random() * (top + 1));
+    while (top) {
+        var current = rand.range(top--);
         var tmp = array[current];
         array[current] = array[top];
         array[top] = tmp;
@@ -137,7 +137,7 @@ rand.shuffle = function(array) {
  * var foo = rand.shuffled([1, 2, 3]);
  */
 rand.shuffled = function(array) {
-    return rand.shuffle(array.slice(0));
+    return rand.shuffle([].slice.call(array, 0));
 };
 
 //////////////////////////////////////////////////////////////////////////////
