@@ -137,13 +137,14 @@
 		},
 		
 		/**
-		 * @return a new shuffled array
+		 * @return {Array} a new shuffled array
 		 * @param {Sequence} sequence
 		 * @example
 		 * var foo = rand.shuffled([1, 2, 3]);
 		 */
 		shuffled: function(sequence) {
-			return this.shuffle(slice.call(sequence, 0));
+			return this.shuffle(sequence.slice ?
+				sequence.slice(0) : slice.call(sequence, 0));
 		},
 
 		// Functions for objects:
