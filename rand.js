@@ -19,41 +19,26 @@
 		/** @type {RandFunction} */
 		this.rand = rand;
 	},
-	has = Object.prototype.hasOwnProperty;
+	has = Object.prototype.hasOwnProperty,
+	slice = Array.prototype.slice;
 	exports.prototype = {
 		constructor: exports,
 
 		// Functions for Numbers:
 		// ======================
 
-<<<<<<< HEAD
-/**
- * @return random
- * @example
- * var n = rand.uniform(2, 3);
- * 1 <= n && n < 3;
- * //-> true
- * rand.uniform(2, 2);
- * //-> 2
- */
-rand.uniform = function(a, b) /**number*/ {
-    return Math.random() * (b - a) + a;
-};
-rand.num  = rand.uniform;
-=======
 		/**
-		 * @return {RandNumber} in the range [a, b]
+		 * @return {RandNumber} in the range [a, b)
 		 * @param {Number} a - lower inclusive bound
-		 * @param {Number} b - upper inclusive bound
+		 * @param {Number} b - upper exclusive bound
 		 * @example
 		 * var n = rand.uniform(2, 3);
-		 * console.assert(2 <= n && n <= 3);
+		 * console.assert(2 <= n && n < 3);
 		 * console.assert(rand.uniform(2, 2) == 2);
 		 */
 		uniform: function(a, b) {
 			return this.rand() * (b - a) + a;
 		},
->>>>>>> c2eea56... Made rand a constructor
 
 		// Functions for integers:
 		// =======================
@@ -69,26 +54,9 @@ rand.num  = rand.uniform;
 		 * console.assert(rand.int_(2, 3) == 2);
 		 */
 		int_: function(j, k) {
-			return Math.floor(rand.uniform(j, k));
+			return Math.floor(this.uniform(j, k));
 		},
 
-<<<<<<< HEAD
-/**
- * @return a randomly selected element from {{start, start + step, ..., stop}}.
- */
-rand.range = function(start, stop, step) {
-    switch (arguments.length) {
-    case 1:
-        return rand.int_(0, start);
-    case 2:
-        return rand.int_(start, stop);
-    case 3:
-        return start + rand.int_(0, (stop-start) / step) * step;
-    default:
-        return 0;
-    }
-};
-=======
 		/**
 		 * @return {RandInteger} in the range [j, k]
 		 * @param {Number} j - lower inclusive bound
@@ -99,9 +67,8 @@ rand.range = function(start, stop, step) {
 		 * console.assert(rand.int(2, 2) == 2);
 		 */
 		'int': function(j, k) {
-			return rand.int_(j, k + 1);
+			return this.int_(j, k + 1);
 		},
->>>>>>> c2eea56... Made rand a constructor
 
 		/**
 		 * @return {RandInteger} element from the set of
@@ -113,11 +80,12 @@ rand.range = function(start, stop, step) {
 		range: function(start, stop, step) {
 			switch (arguments.length) {
 			case 1:
-				return rand.int_(0, start);
+				return this.int_(0, start);
 			case 2:
-				return rand.int_(start, stop);
+				return this.int_(start, stop);
 			case 3:
-				return rand.int_(start, stop / step) * step;
+				var below = (stop - start) / step;
+				return start + this.int_(0, below) * step;
 			default:
 				return 0;
 			}
@@ -127,26 +95,55 @@ rand.range = function(start, stop, step) {
 		// ===================================
 		
 		/**
-		 * @return {RandInteger} index from a sequence
-		 * @param {Sequence} seq
+		 * @return {RandInteger} index from sequence
+		 * @param {Sequence} sequence
 		 * @example
 		 * var n = rand.index(Array(3));
 		 * console.assert(0 <= n && n < 3);
 		 * console.assert(rand.index('c') == 0);
 		 */
-		index: function(seq) {
-			return rand.int_(0, seq.length);
+		index: function(sequence) {
+			return this.int_(0, sequence.length);
 		},
 		
 		/**
-		 * @return {RandProp} from a sequence
+		 * @return {*} random element from sequence
+		 * @param {Sequence} sequence
 		 * @example
 		 * var o = rand.item(['a','b']);
 		 * console.assert(o == 'a' || o == 'b');
 		 * console.assert(rand.item('c') == 'c');
 		 */
-		item: function(seq) {
-			return seq[rand.index(seq)];
+		item: function(sequence) {
+			return sequence[this.index(sequence)];
+		},
+
+		/**
+		 * @return the original array, shuffled in place
+		 * @param {Array} array
+		 * @example
+		 * var foo = [1, 2, 3];
+		 * rand.shuffle(foo);
+		 * console.assert(foo[0] == 1 || foo[0] == 2 || foo[0] == 3);
+		 */
+		shuffle: function(array) {
+			var current, swap, top = array.length;
+			while (top) {
+				swap = array[current = this.range(top--)];
+				array[current] = array[top];
+				array[top] = swap;
+			}
+			return array;
+		},
+		
+		/**
+		 * @return a new shuffled array
+		 * @param {Sequence} sequence
+		 * @example
+		 * var foo = rand.shuffled([1, 2, 3]);
+		 */
+		shuffled: function(sequence) {
+			return this.shuffle(slice.call(sequence, 0));
 		},
 
 		// Functions for objects:
@@ -168,8 +165,8 @@ rand.range = function(start, stop, step) {
 		 * @param {*} obj
 		 */
 		key: function(obj) {
-			if (!Object.keys) { return rand._key(obj); }
-			return rand.item(Object.keys(obj));
+			if (!Object.keys) { return this._key(obj); }
+			return this.item(Object.keys(obj));
 		},
 		
 		/**
@@ -177,7 +174,7 @@ rand.range = function(start, stop, step) {
 		 * @param {*} obj
 		 */
 		choice: function(obj) {
-			return obj[rand.key(obj)];
+			return obj[this.key(obj)];
 		},
 	};
 
@@ -194,51 +191,6 @@ rand.range = function(start, stop, step) {
  * Pseudorandomly generated integer
  * @typedef {Number} RandInteger
  */
-<<<<<<< HEAD
-rand.item = function(ary) {
-    return ary[rand.index(ary)];
-};
-
-/**
- * @return the original array, shuffled in place
- * @example
- * var foo = [1, 2, 3];
- * rand.shuffle(foo);
- */
-rand.shuffle = function(array) {
-    var top = array.length;
-    while (top) {
-        var current = rand.range(top--);
-        var tmp = array[current];
-        array[current] = array[top];
-        array[top] = tmp;
-    }
-    return array;
-};
-
-/**
- * @return a new shuffled array
- * @example
- * var foo = rand.shuffled([1, 2, 3]);
- */
-rand.shuffled = function(array) {
-    return rand.shuffle([].slice.call(array, 0));
-};
-
-//////////////////////////////////////////////////////////////////////////////
-// Functions for objects:
-//////////////////////////////////////////////////////////////////////////////
-
-=======
->>>>>>> c2eea56... Made rand a constructor
-/**
- * Pseudorandomly obtained property key from an object
- * @typedef {String} RandKey
- */
-/**
- * Pseudorandomly obtained property value from an object
- * @typedef {*} RandProp
- */
 /**
  * Object that should have a numeric length property and that can be iterable
  * @typedef {(String|Array|Object)} Sequence
@@ -248,9 +200,3 @@ rand.shuffled = function(array) {
  * @callback RandFunction
  * @return {RandNumber} in the range [0, 1)
  */
-<<<<<<< HEAD
-rand.choice = function(obj) {
-    return obj[rand.key(obj)];
-};
-=======
->>>>>>> c2eea56... Made rand a constructor
