@@ -58,6 +58,17 @@
 		},
 
 		/**
+		 * @return {RandInteger} below k
+		 * @param {Number} k - upper exclusive bound
+		 * @example
+		 * var n = rand.below(2);
+		 * console.assert(n == 0 || n == 1);
+		 */
+		below: function(k) {
+			return Math.floor(this.rand()) * k;
+		},
+
+		/**
 		 * @return {RandInteger} in the range [j, k]
 		 * @param {Number} j - lower inclusive bound
 		 * @param {Number} k - upper inclusive bound
@@ -80,12 +91,12 @@
 		range: function(start, stop, step) {
 			switch (arguments.length) {
 			case 1:
-				return this.int_(0, start);
+				return this.below(start);
 			case 2:
 				return this.int_(start, stop);
 			case 3:
-				var below = (stop - start) / step;
-				return start + this.int_(0, below) * step;
+				var below = this.below((stop - start) / step);
+				return start + below * step;
 			default:
 				return 0;
 			}
@@ -103,7 +114,7 @@
 		 * console.assert(rand.index('c') == 0);
 		 */
 		index: function(sequence) {
-			return this.int_(0, sequence.length);
+			return this.below(sequence.length);
 		},
 		
 		/**
