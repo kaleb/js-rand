@@ -187,7 +187,7 @@
 		 */
 		choice: function(obj) {
 			return obj[this.key(obj)];
-		},
+		}
 	};
 
 	var rand = new exports(Math.random);
